@@ -30,7 +30,7 @@ O fluxo de funcionamento segue a lógica:
 ## 🚀 Como Executar o Experimento
 1. Clone o repositório:
    ```bash
-   git clone [https://github.com/andretrindade13/geminidev.git](https://github.com/andretrindade13/geminidev.git)
+   git clone https://github.com/andretrindade13/geminidev.git
 
 ## 📁 Estrutura do Projeto
 ```text
