@@ -20,41 +20,60 @@ def main():
         types.Content(role="user",parts=[types.Part(text=args.user_prompt)])
     ]
 
-    response = client.models.generate_content(
-        model='gemini-2.5-flash', 
-        contents=messages,
-        config=types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
-            temperature=0,
-            tools=[available_functions]
+    max_iters = 20
+    for i in range(0, max_iters):
+        response = client.models.generate_content(
+            model='gemini-2.5-flash', 
+            contents=messages,
+            config=types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
+                temperature=0,
+                tools=[available_functions]
+            )
         )
-    )
 
-    if response is None or response.usage_metadata is None:
-        return 
-    
-    if(args.verbose):
-        print(f"User prompt: {args.user_prompt}")
-        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
-    
-    if not response.function_calls is None:
-        function_results = []
-        for function_call in response.function_calls:
-          try:
-             function_call_result = call_function(function_call)
-             print(function_call_result)
-            #  if function_call_result.parts[0].function_response is None:
-            #      raise ValueError("Error during function call: response is not a a FunctionResponse object")
-            #  elif function_call_result.parts[0].function_response.response:
-            #      raise ValueError("Error during function call: empty response")
-             
-            #  function_results.append(function_call_result.parts[0])
-              
-          except Exception as e:
-              print(f"Error on call function: {e}")
-    else:
-        print(response.text)
+        if response is None or response.usage_metadata is None:
+            return 
+        
+        if(args.verbose):
+            print(f"User prompt: {args.user_prompt}")
+            print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+            print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+
+        if response.candidates:
+            for candidate in response.candidates:
+                if candidate is None or candidate.content is None:
+                    continue
+                messages.append(candidate.content)
+        
+        if response.function_calls:
+            for function_call_part in response.function_calls:
+        
+                try:
+                    function_call_result = call_function(function_call_part, args.verbose)
+                    # Validate non-empty parts
+                    if not function_call_result.parts:
+                        raise ValueError(
+                            "Function returned a Content object with empty parts"
+                        )
+                    if function_call_result.parts[0].function_response is None:
+                        raise ValueError("Error during function call: response is not a a FunctionResponse object")
+                    if function_call_result.parts[0].function_response.response is None:
+                        raise ValueError("Error during function call: empty response")
+                        
+                    messages.append(function_call_result)
+
+                    if args.verbose:
+                        print(f"-> {function_call_result.parts[0].function_response.response}")
+                    
+                    
+                except Exception as e:
+                    print(f"Error on call function: {e}")
+        else:
+            # final agent text response
+            print(response.text)
+            print(f'final response: {response.text}')
+            return
    
 
 main()

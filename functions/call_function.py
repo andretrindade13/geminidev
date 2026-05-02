@@ -53,10 +53,5 @@ def call_function(function_call, verbose=False):
                 )
             ],
         )
-     # Validate non-empty parts
-    if not result_content.parts:
-        raise ValueError(
-            f"Function '{function_name}' returned a Content object with empty parts"
-        )
 
     return result_content
