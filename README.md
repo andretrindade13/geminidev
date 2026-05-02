@@ -34,7 +34,9 @@ O fluxo de funcionamento segue a lógica:
    git clone https://github.com/andretrindade13/geminidev.git
 2. Inicie o servidor
    ```bash
+   -- antes de solicitar uma correçao no código, tente criar um bug propositalmente no projeto de exemplo /calculator para que o agente corrija
    uv run main.py "<Seu prompt>"
+3. ⚠️ Esta implemetação de agente de IA é para fins educacionais, não use este código para outros projetos, por motivo de segurança.
 
 
 ## 📁 Estrutura do Projeto
