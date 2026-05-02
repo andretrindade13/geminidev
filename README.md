@@ -18,19 +18,24 @@ O agente atua sobre um mini projeto de calculadora (localizado na pasta `/calcul
 ## 🏗️ Arquitetura Simples
 O fluxo de funcionamento segue a lógica:
 1. **Entrada:** O usuário aponta um problema ou arquivo.
-2. **Contexto:** O agente lê o arquivo Python da calculadora.
+2. **Contexto:** O agente lê os arquivos Python da calculadora.
 3. **Processamento:** A API do Gemini analisa o código conforme as instruções do sistema.
-4. **emDesenvolvimento**
+4. **ação:**: O agente inicia um loop para acessar e agir de forma autônoma para concluir a solicitação do usuário
+5. **Resposta:** O agente devolve a respostas com as ações e soluções realizadas, ao usuário 
 
 ## 🛠️ Tecnologias
-* **Linguagem:** Python 3.x
-* **LLM:** Google Gemini Pro
-* **Bibliotecas:** `google-generativeai`, `python-dotenv`
+* **Linguagem:** Python >=3.10
+* **LLM:** Google Gemini **gemini-2.5-flash**
+* **Bibliotecas:** `google.genai`, `python-dotenv`
 
 ## 🚀 Como Executar o Experimento
 1. Clone o repositório:
    ```bash
    git clone https://github.com/andretrindade13/geminidev.git
+2. Inicie o servidor
+   ```bash
+   uv run main.py "<Seu prompt>"
+
 
 ## 📁 Estrutura do Projeto
 ```text
